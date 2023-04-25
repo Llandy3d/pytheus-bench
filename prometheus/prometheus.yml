@@ -5,10 +5,18 @@ global:
 #   - url: http://host.docker.internal:9090/api/v1/push
 
 scrape_configs:
-  - job_name: 'server-singleprocess'
+  - job_name: 'server-singleprocess-a'
     static_configs:
-      - targets: ['server-singleprocess:5000']
+      - targets: ['server-singleprocess-a:5000']
 
-  - job_name: 'server-multiprocess'
+  - job_name: 'server-singleprocess-b'
     static_configs:
-      - targets: ['server-multiprocess:5001']
+      - targets: ['server-singleprocess-b:5002']
+
+  - job_name: 'server-multiprocess-a'
+    static_configs:
+      - targets: ['server-multiprocess-a:5001']
+
+  - job_name: 'server-multiprocess-b'
+    static_configs:
+      - targets: ['server-multiprocess-b:5003']

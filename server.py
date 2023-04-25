@@ -14,7 +14,16 @@ if os.environ.get('PYTHEUS_MULTIPROCESS_TEST'):
     )
 
 
-http_hit_count_total = Counter('http_hit_count_total', 'description')
+workers_count = os.environ.get('WORKERS_COUNT')
+assert workers_count
+
+
+http_hit_count_total = Counter(
+    'http_hit_count_total',
+    'description',
+    required_labels=['workers_count'],
+    default_labels={'workers_count': workers_count}
+)
 
 
 app = Flask(__name__)
