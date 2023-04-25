@@ -1,0 +1,61 @@
+version: "3.8"
+
+services:
+    server-singleprocess:
+        container_name: server-singleprocess
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        ports:
+            - "5000:5000"
+        depends_on:
+            - redis
+
+    server-multiprocess:
+        container_name: server-multiprocess
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        command: "gunicorn -w 4 --bind 0.0.0.0:5001 server:app"
+        environment:
+            PYTHEUS_MULTIPROCESS_TEST: 1
+        ports:
+            - "5001:5001"
+        depends_on:
+            - redis
+
+    redis:
+        image: redis
+        container_name: redis
+        ports:
+            - "6379:6379"
+
+    prometheus:
+        image: prom/prometheus:latest
+        user: root
+        container_name: prometheus
+        restart: unless-stopped
+        ports:
+            - "9090:9090"
+        volumes:
+            - ./prometheus:/etc/prometheus
+            - prometheus_data:/prometheus
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/prometheus'
+            - '--web.enable-lifecycle'  # reload config without restart
+
+    grafana:
+        image: grafana/grafana:latest
+        container_name: grafana
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./datasources:/etc/grafana/provisioning/datasources/
+
+volumes:
+    prometheus_data: {}
