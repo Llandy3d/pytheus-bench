@@ -20,3 +20,7 @@ scrape_configs:
   - job_name: 'server-multiprocess-b'
     static_configs:
       - targets: ['server-multiprocess-b:5003']
+
+  - job_name: 'server-multiprocess-c'
+    static_configs:
+      - targets: ['server-multiprocess-c:5004']

@@ -63,6 +63,22 @@ services:
         depends_on:
             - redis
 
+    server-multiprocess-c:
+        container_name: server-multiprocess-c
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        command: "gunicorn -w 5 --bind 0.0.0.0:5004 server:app"
+        environment:
+            PYTHEUS_MULTIPROCESS_TEST: 1
+            WORKERS_COUNT: 5
+        ports:
+            - "5004:5004"
+        depends_on:
+            - redis
+
     redis:
         image: redis
         container_name: redis
