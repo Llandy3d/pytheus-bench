@@ -38,6 +38,8 @@ services:
             ssh:
                 - default
         command: "gunicorn -w 1 --bind 0.0.0.0:5002 server_old:app"
+        environment:
+            PROMETHEUS_DISABLE_CREATED_SERIES: True
         ports:
             - "5002:5002"
 
