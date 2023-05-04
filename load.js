@@ -10,8 +10,8 @@ export const options = {
 export default function () {
   http.get('http://localhost:5000');
   http.get('http://localhost:5001');
-  http.get('http://localhost:5002');
-  http.get('http://localhost:5003');
-  http.get('http://localhost:5004');
+  // http.get('http://localhost:5002');
+  // http.get('http://localhost:5003');
+  // http.get('http://localhost:5004');
   sleep(1);
 }
