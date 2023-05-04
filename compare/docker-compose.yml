@@ -13,8 +13,6 @@ services:
             WORKERS_COUNT: 1
         ports:
             - "5000:5000"
-        depends_on:
-            - redis
 
     pytheus-multiprocess:
         container_name: pytheus-multiprocess
@@ -31,6 +29,17 @@ services:
             - "5001:5001"
         depends_on:
             - redis
+
+    old-singleprocess:
+        container_name: old-singleprocess
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        command: "gunicorn -w 1 --bind 0.0.0.0:5002 server_old:app"
+        ports:
+            - "5002:5002"
 
 
     redis:
