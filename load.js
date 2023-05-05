@@ -8,7 +8,7 @@ import { sleep } from 'k6';
 // };
 
 
-var vus = 10;
+var vus = 20;
 var iterations = 100;
 var max_duration = '60s';
 var executor = 'shared-iterations';

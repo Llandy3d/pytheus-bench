@@ -28,7 +28,7 @@ queries = [
     'http_hit_count_total',
     'http_request_duration_seconds_count',
     'http_request_duration_seconds_sum',
-    'histogram_quantile(0.95, http_request_duration_seconds_bucket)',
+    'histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))',
 ]
 
 for query in queries:
