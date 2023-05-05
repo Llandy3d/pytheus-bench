@@ -7,35 +7,41 @@ import { sleep } from 'k6';
 //   duration: '2s',
 // };
 
+
+var vus = 10;
+var iterations = 100;
+var max_duration = '60s';
+var executor = 'shared-iterations';
+
 export const options = {
   scenarios: {
     pytheus_singleprocess: {
-      executor: 'shared-iterations',
+      executor: executor,
       exec: 'pytheus_singleprocess',
-      vus: 10,
-      iterations: 100,
-      maxDuration: '60s',
+      vus: vus,
+      iterations: iterations,
+      maxDuration: max_duration,
     },
     pytheus_multiprocess: {
-      executor: 'shared-iterations',
+      executor: executor,
       exec: 'pytheus_multiprocess',
-      vus: 10,
-      iterations: 100,
-      maxDuration: '60s',
+      vus: vus,
+      iterations: iterations,
+      maxDuration: max_duration,
     },
     old_singleprocess: {
-      executor: 'shared-iterations',
+      executor: executor,
       exec: 'old_singleprocess',
-      vus: 10,
-      iterations: 100,
-      maxDuration: '60s',
+      vus: vus,
+      iterations: iterations,
+      maxDuration: max_duration,
     },
     old_multiprocess: {
-      executor: 'shared-iterations',
+      executor: executor,
       exec: 'old_multiprocess',
-      vus: 10,
-      iterations: 100,
-      maxDuration: '60s',
+      vus: vus,
+      iterations: iterations,
+      maxDuration: max_duration,
     },
 
   },
