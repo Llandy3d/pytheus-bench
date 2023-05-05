@@ -30,6 +30,13 @@ export const options = {
       iterations: 100,
       maxDuration: '60s',
     },
+    old_multiprocess: {
+      executor: 'shared-iterations',
+      exec: 'old_multiprocess',
+      vus: 10,
+      iterations: 100,
+      maxDuration: '60s',
+    },
 
   },
 
@@ -56,5 +63,10 @@ export function pytheus_multiprocess() {
 
 export function old_singleprocess() {
   http.get('http://localhost:5002');
+  sleep(1);
+}
+
+export function old_multiprocess() {
+  http.get('http://localhost:5003');
   sleep(1);
 }

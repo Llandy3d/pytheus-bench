@@ -43,6 +43,22 @@ services:
         ports:
             - "5002:5002"
 
+    old-multiprocess:
+        container_name: old-multiprocess
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        # gunicorn -w 4 --bind 0.0.0.0:5003 server_old:app
+        command: "/app/clean_old_multiprocess_data_and_start_gunicorn.sh"
+        environment:
+            PROMETHEUS_DISABLE_CREATED_SERIES: True
+            PROMETHEUS_MULTIPROC_DIR: '/old_multiprocess_data'
+        volumes:
+            - old_multiprocess_data:/old_multiprocess_data
+        ports:
+            - "5003:5003"
 
     redis:
         image: redis
@@ -75,3 +91,4 @@ services:
 
 volumes:
     prometheus_data: {}
+    old_multiprocess_data: {}

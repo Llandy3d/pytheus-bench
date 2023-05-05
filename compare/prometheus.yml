@@ -13,3 +13,7 @@ scrape_configs:
   - job_name: 'old-singleprocess'
     static_configs:
       - targets: ['old-singleprocess:5002']
+
+  - job_name: 'old-multiprocess'
+    static_configs:
+      - targets: ['old-multiprocess:5003']
