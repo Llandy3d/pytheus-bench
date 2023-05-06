@@ -1,5 +1,6 @@
 import os
-from flask import Flask, Response
+from flask import Flask, Response, request
+from flask_sqlalchemy import SQLAlchemy
 from pytheus.metrics import Counter, Histogram
 from pytheus.exposition import generate_metrics, PROMETHEUS_CONTENT_TYPE
 
@@ -32,6 +33,32 @@ http_request_duration_seconds = Histogram(
 
 
 app = Flask(__name__)
+db = SQLAlchemy()
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
+db.init_app(app)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=False, nullable=False)
+    email = db.Column(db.String)
+
+
+with app.app_context():
+    db.create_all()
+
+
+@app.route("/users/create", methods=["POST"])
+@http_request_duration_seconds
+def user_create():
+    data = request.json
+    user = User(
+        username=data["username"],
+        email=data["email"],
+    )
+    db.session.add(user)
+    db.session.commit()
+    return Response()
 
 
 @app.route("/metrics")

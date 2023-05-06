@@ -37,8 +37,9 @@ for query in queries:
 
     print(f'query: {query}')
     print((len(query) + 7) * '=')
+    metrics.sort(key=lambda x: x['metric']['job'], reverse=True)
     for metric in metrics:
-        job = metric['metric']['job']
+        job = metric['metric']['job'].ljust(22)
         value = metric['value'][1]
         print(f'job: {job}    value: {value}')
     print()
