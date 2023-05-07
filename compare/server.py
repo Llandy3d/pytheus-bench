@@ -1,4 +1,5 @@
 import os
+import sqlalchemy
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
 from pytheus.metrics import Counter, Histogram
@@ -58,7 +59,10 @@ class User(db.Model):
 
 
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except sqlalchemy.exc.OperationalError:
+        pass
 
 
 @app.route("/users/create", methods=["POST"])

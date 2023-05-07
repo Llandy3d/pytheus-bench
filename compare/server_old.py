@@ -1,4 +1,5 @@
 import os
+import sqlalchemy
 import prometheus_client
 from flask import Flask, Response, request
 from flask_sqlalchemy import SQLAlchemy
@@ -58,8 +59,10 @@ class User(db.Model):
 
 
 with app.app_context():
-    db.create_all()
-
+    try:
+        db.create_all()
+    except sqlalchemy.exc.OperationalError:
+        pass
 
 @app.route("/users/create", methods=["POST"])
 @http_request_duration_seconds.time()
