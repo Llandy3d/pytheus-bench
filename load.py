@@ -4,6 +4,8 @@ import subprocess
 import time
 import requests
 
+from collections import defaultdict
+
 
 file_path = 'test.json'
 prometheus_url = 'http://localhost:9090/api/v1/query'
@@ -14,9 +16,9 @@ sub = subprocess.run(
 )
 sub.check_returncode()
 
-with open(file_path, 'r') as f:
-    result = json.loads(f.read())
-os.remove(file_path)
+# with open(file_path, 'r') as f:
+#     result = json.loads(f.read())
+# os.remove(file_path)
 
 
 # wait to be sure that a scrape was done by prometheus
@@ -29,17 +31,40 @@ queries = [
     'http_request_duration_seconds_count',
     'http_request_duration_seconds_sum',
     'histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))',
+    'labeled_counter_total',
 ]
+
+# for query in queries:
+#     resp = requests.get(prometheus_url, params={'query': query})
+#     metrics = resp.json()['data']['result']
+
+#     print(f'query: {query}')
+#     print((len(query) + 7) * '=')
+#     metrics.sort(key=lambda x: x['metric']['job'], reverse=True)
+#     for metric in metrics:
+#         job = metric['metric']['job'].ljust(22)
+#         value = metric['value'][1]
+#         print(f'job: {job}    value: {value}')
+#     print()
+
 
 for query in queries:
     resp = requests.get(prometheus_url, params={'query': query})
     metrics = resp.json()['data']['result']
 
+    filtered = defaultdict(list)
+
+    # separate by job and add up different values
+    for metric in metrics:
+        metric_list = filtered[metric['metric']['job']]
+        value = metric['value'][1]
+        if value not in metric_list:
+            metric_list.append(value)
+
     print(f'query: {query}')
     print((len(query) + 7) * '=')
-    metrics.sort(key=lambda x: x['metric']['job'], reverse=True)
-    for metric in metrics:
-        job = metric['metric']['job'].ljust(22)
-        value = metric['value'][1]
-        print(f'job: {job}    value: {value}')
+    sorted_job = sorted(filtered, reverse=True)
+    for job in sorted_job:
+        value = filtered[job]
+        print(f'job: {job.ljust(22)}    value: {", ".join(value)}')
     print()

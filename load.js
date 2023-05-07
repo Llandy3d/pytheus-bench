@@ -4,7 +4,7 @@ import { sleep } from 'k6';
 
 
 var vus = 20;
-var duration = '1m';
+var duration = '10s';
 var executor = 'constant-vus';
 
 export const options = {
