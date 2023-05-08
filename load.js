@@ -5,6 +5,7 @@ import { sleep } from 'k6';
 
 var vus = 20;
 var duration = '10s';
+// var duration = '5m10s';
 var executor = 'constant-vus';
 
 export const options = {
@@ -39,9 +40,9 @@ export const options = {
 };
 
 export default function () {
-  http.get(`http://localhost:${__ENV.PORT}`);
-
   const url_base = `http://localhost:${__ENV.PORT}`;
+
+  http.get(url_base);  // home
 
   const payload = JSON.stringify({
     username: 'aaa',
@@ -54,6 +55,7 @@ export default function () {
     },
   };
 
+  // create user endpoint
   http.post(url_base + '/users/create', payload, params);
 
   sleep(1);

@@ -1,5 +1,6 @@
-import os
-import json
+import argparse
+# import os
+# import json
 import subprocess
 import time
 import requests
@@ -10,9 +11,33 @@ from collections import defaultdict
 file_path = 'test.json'
 prometheus_url = 'http://localhost:9090/api/v1/query'
 
+parser = argparse.ArgumentParser()
+# parser.add_argument("--cleanup", type=bool, help="Your age.")
+parser.add_argument("--cleanup", action="store_true")
+args = parser.parse_args()
+
+#### cleanup ####
+
+if args.cleanup:
+    cleanup_commands = [
+        ['docker-compose', '-f', 'compare/docker-compose.yml', 'down'],
+        ['docker', 'system', 'prune', '-a', '--volumes', '-f'],
+        ['docker-compose', '-f', 'compare/docker-compose.yml', 'up', '--build', '-d'],
+    ]
+
+    for command in cleanup_commands:
+        sub = subprocess.run(
+            command,
+        )
+        sub.check_returncode()
+
+    # give time for services to startup
+    print('giving time for services to start...')
+    time.sleep(10)
 
 sub = subprocess.run(
-    ['k6', 'run', 'load.js', f'--summary-export={file_path}']
+    ['k6', 'run', 'load.js']
+    # ['k6', 'run', 'load.js', f'--summary-export={file_path}']
 )
 sub.check_returncode()
 
@@ -32,6 +57,7 @@ queries = [
     'http_request_duration_seconds_sum',
     'histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))',
     'labeled_counter_total',
+    'count(labeled_counter_total{random_string=~".+"}) by (job)',
 ]
 
 # for query in queries:

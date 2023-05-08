@@ -22,6 +22,7 @@ assert workers_count
 
 with open('labels.txt', 'r') as f:
     labels = f.readlines()[:100]
+    labels = [label[:-1] for label in labels]
 
 labeled_counters = []
 labeled_counter = Counter(
@@ -32,6 +33,10 @@ labeled_counter = Counter(
 for label in labels:
     labeled_counters.append(labeled_counter.labels({'random_string': label}))
 
+
+lot_of_metrics = []
+for label in labels:
+    lot_of_metrics.append(Counter(f'counter_{label}', 'description'))
 
 http_hit_count_total = Counter(
     'http_hit_count_total',
@@ -75,8 +80,8 @@ def user_create():
     )
     db.session.add(user)
     db.session.commit()
-    for labeled_counter in labeled_counters:
-        labeled_counter.inc()
+    # for labeled_counter in labeled_counters:
+    #     labeled_counter.inc()
     return Response()
 
 
