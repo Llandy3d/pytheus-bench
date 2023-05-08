@@ -51,6 +51,11 @@ http_request_duration_seconds = Histogram(
     registry=registry,
 )
 
+scrape_duration_seconds = Histogram(
+    'scrape_duration_seconds',
+    'description',
+)
+
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -86,6 +91,7 @@ def user_create():
 
 
 @app.route("/metrics")
+@scrape_duration_seconds.time()
 def metrics():
     data = generate_latest(registry)
     return Response(data, headers={'Content-Type': CONTENT_TYPE_LATEST})

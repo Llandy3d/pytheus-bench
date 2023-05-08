@@ -58,6 +58,8 @@ queries = [
     'histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))',
     'labeled_counter_total',
     'count(labeled_counter_total{random_string=~".+"}) by (job)',
+    'scrape_duration_seconds_sum',
+    'histogram_quantile(0.95, rate(scrape_duration_seconds_bucket[5m]))',
 ]
 
 # for query in queries:

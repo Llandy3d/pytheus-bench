@@ -50,6 +50,11 @@ http_request_duration_seconds = Histogram(
     'description',
 )
 
+scrape_duration_seconds = Histogram(
+    'scrape_duration_seconds',
+    'description',
+)
+
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -86,6 +91,7 @@ def user_create():
 
 
 @app.route("/metrics")
+@scrape_duration_seconds
 def metrics():
     data = generate_metrics()
     return Response(data, headers={'Content-Type': PROMETHEUS_CONTENT_TYPE})
