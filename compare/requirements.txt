@@ -10,7 +10,7 @@ itsdangerous==2.1.2
 Jinja2==3.1.2
 MarkupSafe==2.1.2
 prometheus-client==0.16.0
-pytheus==0.0.12
+pytheus==0.0.13
 redis==4.5.4
 requests==2.29.0
 SQLAlchemy==2.0.12

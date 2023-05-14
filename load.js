@@ -43,6 +43,7 @@ export default function () {
   const url_base = `http://localhost:${__ENV.PORT}`;
 
   http.get(url_base);  // home
+  http.get(url_base + '/metrics');  // metrics
 
   const payload = JSON.stringify({
     username: 'aaa',
