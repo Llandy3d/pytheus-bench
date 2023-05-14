@@ -22,7 +22,7 @@ The scrapes are happening every `5s`.
 - `http_hit_count_total`: an increasing counter for everytime the `/` path gets hit
 - `http_request_duration_seconds`: an histogram tracking request duration for both `/` & `/users/create`
 - `labeled_counter_total`: testing the presence of a metric with many labels, used to assure that the correct amount is in all services
-- `scrape_duration_seconds`: histogram observing the `/metrics` endpoint, this gets hit by prometheus every `5s`~
+- `scrape_duration_seconds`: histogram observing the `/metrics` endpoint, this also gets hit by prometheus every `5s`~
 
 To have some meat `labeled_counter_total` is created with childs, representing a single metric with many labels. (100)
 
@@ -44,15 +44,11 @@ For running multiple times with a clean state the `--cleanup` flag can be used s
 
 ## The Results 🧭
 
-_**The bad**_
-
-Seems to fare very well with the slowest part being the pytheus multiprocessing scrape (this was expected as the logic is currently not optimized, so it's on track 🚀)
-
 _**The good**_
 
 Pytheus multiprocess when working on a metric seems to be faster compared to the official client. Pytheus single process & official client seems to be similar in this.
 
-Pytheus singleproces scrape is the fastest 🎉
+Pytheus multiprocess scraping is faster than the official client 🎉
 
 
 **Summary**  
@@ -61,39 +57,39 @@ _(20 VUs, 5m10s)_
 
 | 95th percentile                                                      | pytheus-singleprocess | pytheus-multiprocess | old-singleprocess | old-multiprocess |
 |------------------------------------------------------------|-----------------------|----------------------|--------------------|-------------------|
-| http_request_duration_seconds | `7ms` | `21ms` | `7ms` | `55ms` |
-| scrape_duration_seconds       | `4ms` | `98ms` | `8ms` | `23ms` |
+| http_request_duration_seconds | `7ms` | `11ms` | `7ms` | `43ms` |
+| scrape_duration_seconds       | `4ms` | `9ms` | `4ms` | `18ms` |
 
 **Raw data**
 
 ```
 query: http_hit_count_total
 ===========================
-job: pytheus-singleprocess     value: 6000
-job: pytheus-multiprocess      value: 6000
-job: old-singleprocess         value: 6000
-job: old-multiprocess          value: 6000
+job: pytheus-singleprocess     value: 5900
+job: pytheus-multiprocess      value: 5900
+job: old-singleprocess         value: 5900
+job: old-multiprocess          value: 5900
 
 query: http_request_duration_seconds_count
 ==========================================
-job: pytheus-singleprocess     value: 12000
-job: pytheus-multiprocess      value: 12000
-job: old-singleprocess         value: 12000
-job: old-multiprocess          value: 12000
+job: pytheus-singleprocess     value: 11800
+job: pytheus-multiprocess      value: 11800
+job: old-singleprocess         value: 11800
+job: old-multiprocess          value: 11800
 
 query: http_request_duration_seconds_sum
 ========================================
-job: pytheus-singleprocess     value: 24.008896752860892
-job: pytheus-multiprocess      value: 60.82827993882165
-job: old-singleprocess         value: 24.138205040002504
-job: old-multiprocess          value: 102.58362351097821
+job: pytheus-singleprocess     value: 24.08901406941004
+job: pytheus-multiprocess      value: 36.49198011102271
+job: old-singleprocess         value: 23.01847539495793
+job: old-multiprocess          value: 95.25116192756104
 
 query: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 ===============================================================================
-job: pytheus-singleprocess     value: 0.007111913357400719
-job: pytheus-multiprocess      value: 0.021321839080459787
-job: old-singleprocess         value: 0.007076167076167067
-job: old-multiprocess          value: 0.055111111111111014
+job: pytheus-singleprocess     value: 0.007551652892561981
+job: pytheus-multiprocess      value: 0.011822183098591565
+job: old-singleprocess         value: 0.007182906458797334
+job: old-multiprocess          value: 0.043567639257294524
 
 query: labeled_counter_total
 ============================
@@ -109,17 +105,24 @@ job: pytheus-multiprocess      value: 100
 job: old-singleprocess         value: 100
 job: old-multiprocess          value: 100
 
+query: scrape_duration_seconds_count
+====================================
+job: pytheus-singleprocess     value: 5964
+job: pytheus-multiprocess      value: 5963
+job: old-singleprocess         value: 5963
+job: old-multiprocess          value: 5964
+
 query: scrape_duration_seconds_sum
 ==================================
-job: pytheus-singleprocess     value: 0.11175767199893016
-job: pytheus-multiprocess      value: 4.509488498002611
-job: old-singleprocess         value: 0.2145954180014087
-job: old-multiprocess          value: 0.5115620429933188
+job: pytheus-singleprocess     value: 4.644447718921583
+job: pytheus-multiprocess      value: 27.741890347999288
+job: old-singleprocess         value: 7.73627702932572
+job: old-multiprocess          value: 30.317366370465606
 
 query: histogram_quantile(0.95, rate(scrape_duration_seconds_bucket[5m]))
 =========================================================================
-job: pytheus-singleprocess     value: 0.00475
-job: pytheus-multiprocess      value: 0.09898936170212766
-job: old-singleprocess         value: 0.008156249999999999
-job: old-multiprocess          value: 0.023607142857142854
+job: pytheus-singleprocess     value: 0.004769734465317919
+job: pytheus-multiprocess      value: 0.009795581395348835
+job: old-singleprocess         value: 0.00483637934169849
+job: old-multiprocess          value: 0.018114776951672858
 ```
