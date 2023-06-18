@@ -34,6 +34,12 @@ export const options = {
       duration: duration,
       env: {PORT: '5003'},
     },
+    pytheus_singleprocess_rust: {
+      executor: executor,
+      vus: vus,
+      duration: duration,
+      env: {PORT: '5004'},
+    },
 
   },
 

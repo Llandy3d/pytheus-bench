@@ -15,6 +15,12 @@ if os.environ.get('PYTHEUS_MULTIPROCESS_TEST'):
         backend_config={"host": "redis", "port": 6379},
     )
 
+if os.environ.get('PYTHEUS_SINGLEPROCESS_RUST'):
+    from pytheus.backends import load_backend
+    from pytheus_backend_rs import SingleProcessBackend
+
+    load_backend(SingleProcessBackend)
+
 
 workers_count = os.environ.get('WORKERS_COUNT')
 assert workers_count

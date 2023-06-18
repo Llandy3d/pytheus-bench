@@ -14,6 +14,20 @@ services:
         ports:
             - "5000:5000"
 
+    pytheus-singleprocess-rust:
+        container_name: pytheus-singleprocess-rust
+        build:
+            context: ./
+            dockerfile: Dockerfile
+            ssh:
+                - default
+        command: "gunicorn -w 1 --bind 0.0.0.0:5004 server:app"
+        environment:
+            PYTHEUS_SINGLEPROCESS_RUST: 1
+            WORKERS_COUNT: 1
+        ports:
+            - "5004:5004"
+
     pytheus-multiprocess:
         container_name: pytheus-multiprocess
         build:

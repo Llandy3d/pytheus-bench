@@ -95,5 +95,5 @@ for query in queries:
     sorted_job = sorted(filtered, reverse=True)
     for job in sorted_job:
         value = filtered[job]
-        print(f'job: {job.ljust(22)}    value: {", ".join(value)}')
+        print(f'job: {job.ljust(26)}    value: {", ".join(value)}')
     print()
